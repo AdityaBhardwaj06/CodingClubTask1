@@ -1,69 +1,133 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 
-class Cards extends StatefulWidget {
-  const Cards({super.key});
+class FlashcardViewer extends StatefulWidget {
+  final List<File> flashcards;
+
+  const FlashcardViewer({Key? key, required this.flashcards}) : super(key: key);
 
   @override
-  State<Cards> createState() => CardsState();
+  _FlashcardViewerState createState() => _FlashcardViewerState();
 }
 
-class CardsState extends State<Cards> {
+class _FlashcardViewerState extends State<FlashcardViewer> {
+  int currentIndex = 0;
+  bool showAnswer = false;
+
+@override
+void didChangeDependencies() {
+  super.didChangeDependencies();
+  setState(() {}); 
+}
+
+
+  void _nextCard() {
+    setState(() {
+      if (currentIndex < widget.flashcards.length - 1) {
+        currentIndex++;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("All Cards, Starting from first card!!"),
+            backgroundColor: Colors.green,
+            duration: Duration(milliseconds: 500),
+          ),
+        );
+        currentIndex = 0;
+      }
+      showAnswer = false;
+    });
+  }
+
+  void _toggleAnswer() {
+    setState(() {
+      showAnswer = !showAnswer;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (widget.flashcards.isEmpty) {
+      return Scaffold(
+        body: Center(child: Text("No Flashcards Available")),
+      );
+    }
+
     return Scaffold(
-      resizeToAvoidBottomInset: false, 
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 500,
-              child: Center(
-                child: Card(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "Card 1",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 10),
-                        TextField(
-                          textAlign: TextAlign.center,
-                          decoration: InputDecoration(
-                            
-                            hintText: "Title",
-                            hintStyle: TextStyle(textBaseline: TextBaseline.alphabetic),
-                          ),
-                        ),
-                      ],
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade400,
+                      blurRadius: 10,
+                      spreadRadius: 2,
                     ),
-                  ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "Card ${currentIndex + 1}/${widget.flashcards.length}",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.purple),
+                    ),
+                    SizedBox(height: 10),
+                    FutureBuilder<String>(
+                      future: widget.flashcards[currentIndex].readAsString(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        }
+                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return Text("No data in this card.");
+                        }
+
+                        List<String> parts = snapshot.data!.split("\n");
+                        String question = parts[0].replaceFirst("Q: ", "");
+                        String answer = parts.length > 1 ? parts[1].replaceFirst("A: ", "") : "No answer available";
+
+                        return Column(
+                          children: [
+                            Text(
+                              showAnswer ? "Answer:" : "Question:",
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              showAnswer ? answer : question,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 20),
+                            ElevatedButton.icon(
+                              onPressed: _toggleAnswer,
+                              icon: Icon(showAnswer ? Icons.visibility_off : Icons.visibility),
+                              label: Text(showAnswer ? "Hide Answer" : "Show Answer"),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                FloatingActionButton.extended(
-                  onPressed: () {},
-                  label: Text("Answer"),
-                  icon: Icon(Icons.remove_red_eye_sharp),
-                ),
-                FloatingActionButton(
-                  onPressed: () {},
-                  child: Icon(Icons.arrow_forward_ios_rounded),
-                ),
-              ],
-            ),
-          ],
+              SizedBox(height: 30),
+              ElevatedButton.icon(
+                onPressed: _nextCard,
+                icon: Icon(Icons.arrow_forward),
+                label: Text("Next Card"),
+              ),
+            ],
+          ),
         ),
       ),
       backgroundColor: Colors.grey[200],
