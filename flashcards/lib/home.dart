@@ -4,11 +4,13 @@ import 'package:flashcards/all_cards.dart';
 import 'package:flashcards/practice.dart';
 import 'package:flutter/material.dart';
 
+// Defining own theme colors used in all files
 class AppColors {
   static const Color violet = Color(0xFF5B4494);
   static const Color lightPurple = Color(0xFFEBDDFF);
 }
 
+// HomeScreen Class 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -26,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadFlashcards();
   }
 
+// Future function to load all the flashcards from the saved files
   Future<void> _loadFlashcards() async {
     final directory = await getApplicationDocumentsDirectory();
     final files = directory
@@ -39,15 +42,19 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+// Function defining what to do on clicking on different children of bottom navigation bar
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      // if the index is 0 it means practice mode is on so always reload the flashcards available and their modified data
       if (index == 0) {
-        _loadFlashcards(); // Reload flashcards when switching to "Cards"
+        _loadFlashcards();  
       }
     });
   }
 
+
+// build function
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,9 +66,11 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: AppColors.lightPurple,
         centerTitle: true,
       ),
+      // body contains a ternary statement to either load practice screen or card menu depending upon the bottom navigation bar setting, 
+      // initially on loading the app practice screen is opened by default
       body: _selectedIndex == 0 
         ? FlashcardViewer(flashcards: flashcardFiles)
-        : PracticeScreen(),
+        : AllCards(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,

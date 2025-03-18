@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class FlashcardViewer extends StatefulWidget {
   final List<File> flashcards;
 
-  const FlashcardViewer({Key? key, required this.flashcards}) : super(key: key);
+  const FlashcardViewer({super.key, required this.flashcards});
 
   @override
   _FlashcardViewerState createState() => _FlashcardViewerState();

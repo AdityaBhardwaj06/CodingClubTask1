@@ -5,16 +5,19 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flashcards/custom_card.dart';
 import 'package:flashcards/card_display.dart';
 
-class PracticeScreen extends StatefulWidget {
+class AllCards extends StatefulWidget {
+  const AllCards({super.key});
+
   @override
-  _PracticeScreenState createState() => _PracticeScreenState();
+  AllCardsState createState() => AllCardsState();
 }
 
-class _PracticeScreenState extends State<PracticeScreen> {
+class AllCardsState extends State<AllCards> {
+  // list to store addresses of all flashcards
   List<File> flashcardFiles = [];
 
   @override
-  void initState() {
+  Future<void> initState() async {
     super.initState();
     _loadFlashcards();
   }
@@ -32,6 +35,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
     });
   }
 
+  // function to create a new card in the list
   void addCard() async {
   final newFile = await Navigator.push(
     context,
@@ -42,10 +46,10 @@ class _PracticeScreenState extends State<PracticeScreen> {
       flashcardFiles.add(newFile);
     });
   }
-  await _loadFlashcards(); // ✅ Ensure the list is refreshed after adding a new card
+  await _loadFlashcards(); 
 }
 
-
+  // deletees a card from the list and its save file
   void deleteCard(int index) {
     setState(() {
       flashcardFiles[index].deleteSync();
@@ -53,6 +57,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
     });
   }
 
+  // opens a card which can be modified
   void openCard(int index) async {
     await Navigator.push(
       context,
@@ -68,6 +73,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       body: Padding(
         padding: EdgeInsets.all(8.0),
         child: GridView.builder(
@@ -88,10 +94,11 @@ class _PracticeScreenState extends State<PracticeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: addCard,
-        child: Icon(Icons.add),
         backgroundColor: AppColors.lightPurple,
+        child: Icon(Icons.add),
+        
       ),
-      backgroundColor: Colors.grey[200],
+      
     );
   }
 }
