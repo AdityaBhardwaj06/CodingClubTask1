@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: _selectedIndex == 0 
         ? FlashcardViewer(flashcards: flashcardFiles)
-        : PracticeScreen(),
+        : AllCards(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,

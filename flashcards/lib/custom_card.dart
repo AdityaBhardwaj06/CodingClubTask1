@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class CustomCard extends StatefulWidget {
   final String text;
+  // Voidcall back is a sort of function which takes no parameter and returns nothing
   final VoidCallback onDelete;
   final VoidCallback onClicked;
 

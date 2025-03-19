@@ -28,7 +28,7 @@ void didChangeDependencies() {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("All Cards, Starting from first card!!"),
+            content: Text("All cards reviewed, Starting from first card!!"),
             backgroundColor: Colors.green,
             duration: Duration(milliseconds: 500),
           ),

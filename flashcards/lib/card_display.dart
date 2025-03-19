@@ -23,7 +23,7 @@ class CardDisplayState extends State<CardDisplay> {
       _loadCardData();
     }
   }
-
+  // Reading the text from the saved file
   Future<void> _loadCardData() async {
     final content = await widget.file!.readAsString();
     final parts = content.split("\n");
@@ -32,11 +32,13 @@ class CardDisplayState extends State<CardDisplay> {
       _answerController.text = parts[1].replaceFirst("A: ", "");
     }
   }
-
+  // function to save a newflash card 
   Future<File?> _saveFlashcard() async {
+    // take the question and answer from text field text controller 
     String question = _questionController.text.trim();
     String answer = _answerController.text.trim();
 
+    //snackbar to show that question and answer text field cannot be empty
     if (question.isEmpty || answer.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Question & Answer cannot be empty!!"), backgroundColor: Colors.red,duration: Duration(milliseconds: 500 ),),
@@ -44,13 +46,16 @@ class CardDisplayState extends State<CardDisplay> {
       return null;
     }
 
+    // Find the directory in which cards are stored
     final directory = await getApplicationDocumentsDirectory();
     final file =
         widget.file ??
+        // saving the file name with time and date at which card created
         File(
           '${directory.path}/card_${DateTime.now().millisecondsSinceEpoch}.txt',
         ); // Ensure unique filename
 
+    // Actually writing to the file
     await file.writeAsString("Q: $question\nA: $answer");
     return file;
   }
@@ -60,6 +65,7 @@ class CardDisplayState extends State<CardDisplay> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Card ${widget.cardNumber}", style: TextStyle(color: AppColors.violet),),
+        // iconbutton to save the card
         actions: [
           IconButton(
             onPressed: () async {
@@ -81,7 +87,7 @@ class CardDisplayState extends State<CardDisplay> {
             TextField(
               controller: _questionController,
               textAlign: TextAlign.center,
-              maxLines: null,
+              maxLines: null, // maxlines set to null so that question/ answer need not be scrolled
               decoration: InputDecoration(
                 labelText: "Question",
                 border: OutlineInputBorder(
@@ -102,6 +108,8 @@ class CardDisplayState extends State<CardDisplay> {
               ),
             ),
             SizedBox(height: 20),
+
+             // a special button also added to save new card
             ElevatedButton.icon(
               onPressed: () async {
                 final file = await _saveFlashcard();
