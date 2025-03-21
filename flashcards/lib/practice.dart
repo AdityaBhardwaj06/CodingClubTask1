@@ -14,12 +14,6 @@ class _FlashcardViewerState extends State<FlashcardViewer> {
   int currentIndex = 0;
   bool showAnswer = false;
 
-@override
-void didChangeDependencies() {
-  super.didChangeDependencies();
-  setState(() {}); 
-}
-
   // Function for new card
   void _nextCard() {
     setState(() {
