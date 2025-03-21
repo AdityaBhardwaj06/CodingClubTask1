@@ -67,7 +67,6 @@ class _FlashcardViewerState extends State<FlashcardViewer> {
                   ],
                 ),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       "Card ${currentIndex + 1}/${widget.flashcards.length}",
