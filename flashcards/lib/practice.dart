@@ -14,13 +14,6 @@ class _FlashcardViewerState extends State<FlashcardViewer> {
   int currentIndex = 0;
   bool showAnswer = false;
 
-@override
-void didChangeDependencies() {
-  super.didChangeDependencies();
-  setState(() {}); 
-}
-
-
   void _nextCard() {
     setState(() {
       if (currentIndex < widget.flashcards.length - 1) {
@@ -81,6 +74,7 @@ void didChangeDependencies() {
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.purple),
                     ),
                     SizedBox(height: 10),
+                    // Future builder widget to display cards with answer and question button 
                     FutureBuilder<String>(
                       future: widget.flashcards[currentIndex].readAsString(),
                       builder: (context, snapshot) {
