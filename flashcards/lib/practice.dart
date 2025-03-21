@@ -20,7 +20,7 @@ void didChangeDependencies() {
   setState(() {}); 
 }
 
-
+  // Function for new card
   void _nextCard() {
     setState(() {
       if (currentIndex < widget.flashcards.length - 1) {
