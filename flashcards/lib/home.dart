@@ -66,8 +66,9 @@ class _HomeScreenState extends State<HomeScreen> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.list_alt_rounded), label: "Cards"),
           BottomNavigationBarItem(icon: Icon(Icons.psychology_sharp), label: "Practice"),
+          BottomNavigationBarItem(icon: Icon(Icons.list_alt_rounded), label: "Cards"),
+          
         ],
       ),
     );
